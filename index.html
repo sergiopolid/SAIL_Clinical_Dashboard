@@ -6,7 +6,7 @@
 <title>SAIL-RA Clinical Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f7f8fa;
@@ -37,7 +37,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{
   background:var(--bg);
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
   color:var(--text);
   font-size:13.5px;
   font-weight:400;
@@ -64,7 +64,7 @@ body{
   border-bottom:1px solid rgba(255,255,255,.07);
 }
 .sidebar-title .logo{
-  font-family:'Instrument Serif',serif;
+  font-family:'Playfair Display',serif;
   font-size:22px;
   font-weight:400;
   color:#f9fafb;
@@ -77,7 +77,7 @@ body{
 }
 .sidebar-title small{
   display:block;
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9px;
   color:#6b7280;
   margin-top:6px;
@@ -86,7 +86,7 @@ body{
 }
 .nav-section{
   padding:20px 18px 5px;
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:8.5px;
   letter-spacing:1.6px;
   text-transform:uppercase;
@@ -102,7 +102,7 @@ body{
   border:none;
   border-left:3px solid transparent;
   color:#9ca3af;
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
   font-size:12.5px;
   font-weight:400;
   cursor:pointer;
@@ -122,7 +122,7 @@ body{
   margin-top:auto;
   padding:16px 18px;
   border-top:1px solid rgba(255,255,255,.06);
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9px;
   color:#4b5563;
   line-height:1.8;
@@ -144,14 +144,14 @@ body{
   box-shadow:var(--shadow);
 }
 .top-bar h1{
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
   font-weight:600;
   font-size:15px;
   color:var(--text);
   letter-spacing:-.2px;
 }
 .top-bar .n-badge{
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:11px;
   background:var(--accent-light);
   color:var(--accent);
@@ -172,7 +172,7 @@ body{
 }
 .filters-bar label{
   color:var(--muted);
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9.5px;
   text-transform:uppercase;
   letter-spacing:.9px;
@@ -184,7 +184,7 @@ body{
   border-radius:var(--radius);
   padding:4px 9px;
   font-size:12px;
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
   cursor:pointer;
   outline:none;
   transition:border-color .12s;
@@ -198,7 +198,7 @@ body{
   padding:4px 12px;
   border-radius:var(--radius);
   font-size:11.5px;
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
   cursor:pointer;
   transition:all .12s;
 }
@@ -220,7 +220,7 @@ body{
   box-shadow:var(--shadow);
 }
 .kpi-label{
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9px;
   color:var(--muted2);
   text-transform:uppercase;
@@ -228,7 +228,7 @@ body{
   margin-bottom:8px;
 }
 .kpi-val{
-  font-family:'Instrument Serif',serif;
+  font-family:'Playfair Display',serif;
   font-size:38px;
   font-weight:400;
   line-height:1;
@@ -256,7 +256,7 @@ body{
   box-shadow:var(--shadow);
 }
 .chart-card h3{
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9px;
   font-weight:500;
   color:var(--muted);
@@ -276,7 +276,7 @@ body{
   margin-bottom:var(--gap);
 }
 .chart-wide h3{
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:9px;
   font-weight:500;
   color:var(--muted);
@@ -307,7 +307,7 @@ thead th{
   text-align:left;
   border-bottom:1px solid var(--border2);
   color:var(--muted);
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-weight:500;
   font-size:9px;
   text-transform:uppercase;
@@ -323,7 +323,7 @@ tbody td{
   color:var(--text2);
 }
 tbody td code{
-  font-family:'Geist Mono',monospace;
+  font-family:'Space Mono',monospace;
   font-size:11px;
   color:var(--accent);
   background:var(--accent-light);
@@ -340,7 +340,7 @@ tbody tr:last-child td{border-bottom:none}
   padding:2px 9px;
   font-size:10.5px;
   font-weight:500;
-  font-family:'Geist',sans-serif;
+  font-family:'DM Sans',sans-serif;
 }
 .pill-ila{background:var(--amber-light);color:var(--amber);border:1px solid #fcd34d}
 .pill-noild{background:var(--green-light);color:var(--green);border:1px solid #6ee7b7}
@@ -349,6 +349,14 @@ tbody tr:last-child td{border-bottom:none}
 /* ── MISSINGNESS ──────────────────────── */
 .miss-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
 .miss-fill{height:100%;border-radius:3px}
+
+/* ── VIOLIN ───────────────────────────── */
+.violin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.violin-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.violin-card h3{font-family:'Space Mono',monospace;font-size:9px;font-weight:500;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.violin-card svg{width:100%;overflow:visible}
+.violin-wide{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:var(--gap)}
+.violin-wide h3{font-family:'Space Mono',monospace;font-size:9px;font-weight:500;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 
 /* ── SCROLLBAR ────────────────────────── */
 ::-webkit-scrollbar{width:5px;height:5px}
@@ -397,7 +405,14 @@ tbody tr:last-child td{border-bottom:none}
       <option value="ILA">ILA</option>
       <option value="No ILA/ILD">No ILA/ILD</option>
     </select>
-    <button class="reset-btn" onclick="resetFilters()">↺ Reset</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <span style="font-family:'Space Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--muted)">Chart</span>
+      <div id="viz-toggle" style="display:flex;border:1px solid var(--border2);border-radius:6px;overflow:hidden">
+        <button id="btn-bar"    onclick="setVizMode('bar')"    style="padding:4px 11px;font-size:11.5px;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all .12s">Bar</button>
+        <button id="btn-violin" onclick="setVizMode('violin')" style="padding:4px 11px;font-size:11.5px;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--bg2);color:var(--muted);transition:all .12s">Violin</button>
+      </div>
+      <button class="reset-btn" onclick="resetFilters()">↺ Reset</button>
+    </div>
   </div>
   <div class="content">
 
@@ -427,6 +442,10 @@ tbody tr:last-child td{border-bottom:none}
       <div class="chart-card"><h3>Smoking Status</h3><canvas id="ch-smoking"></canvas></div>
       <div class="chart-card"><h3>BMI (mean by group)</h3><canvas id="ch-bmi"></canvas></div>
     </div>
+    <div id="vln-demo-cont" style="display:none" class="violin-grid">
+      <div class="violin-card"><h3>Age (years)</h3><div id="vln-age"></div></div>
+      <div class="violin-card"><h3>BMI</h3><div id="vln-bmi"></div></div>
+    </div>
   </div>
 
   <!-- SEROLOGY -->
@@ -447,6 +466,10 @@ tbody tr:last-child td{border-bottom:none}
       <div class="chart-card"><h3>Mean DAS28-ESR by group</h3><canvas id="ch-das28-dist"></canvas></div>
       <div class="chart-card"><h3>RA Disease Duration (mean yrs)</h3><canvas id="ch-radur"></canvas></div>
     </div>
+    <div id="vln-disease-cont" style="display:none" class="violin-grid">
+      <div class="violin-card"><h3>DAS28-ESR</h3><div id="vln-das28"></div></div>
+      <div class="violin-card"><h3>RA Duration (yrs)</h3><div id="vln-radur"></div></div>
+    </div>
   </div>
 
   <!-- IMAGING -->
@@ -459,6 +482,13 @@ tbody tr:last-child td{border-bottom:none}
       <div class="chart-card"><h3>% Ground Glass</h3><canvas id="ch-gg"></canvas></div>
       <div class="chart-card"><h3>% Emphysema</h3><canvas id="ch-emph"></canvas></div>
     </div>
+    <div id="vln-img-cont" style="display:none" class="violin-grid">
+      <div class="violin-card"><h3>% Interstitial</h3><div id="vln-interstitial"></div></div>
+      <div class="violin-card"><h3>% Reticular</h3><div id="vln-reticular"></div></div>
+      <div class="violin-card"><h3>% Honeycombing</h3><div id="vln-honey"></div></div>
+      <div class="violin-card"><h3>% Ground Glass</h3><div id="vln-gg"></div></div>
+      <div class="violin-card"><h3>% Emphysema</h3><div id="vln-emph"></div></div>
+    </div>
   </div>
 
   <!-- PFTs -->
@@ -468,6 +498,12 @@ tbody tr:last-child td{border-bottom:none}
       <div class="chart-card"><h3>FVC %predicted</h3><canvas id="ch-fvc"></canvas></div>
       <div class="chart-card"><h3>DLCO %predicted</h3><canvas id="ch-dlco"></canvas></div>
       <div class="chart-card"><h3>FEV1/FVC Ratio</h3><canvas id="ch-ratio"></canvas></div>
+    </div>
+    <div id="vln-pfts-cont" style="display:none" class="violin-grid">
+      <div class="violin-card"><h3>FEV1 %predicted</h3><div id="vln-fev1"></div></div>
+      <div class="violin-card"><h3>FVC %predicted</h3><div id="vln-fvc"></div></div>
+      <div class="violin-card"><h3>DLCO %predicted</h3><div id="vln-dlco"></div></div>
+      <div class="violin-card"><h3>FEV1/FVC Ratio</h3><div id="vln-ratio"></div></div>
     </div>
   </div>
 
@@ -520,6 +556,16 @@ function diseaseColor(d) { return DISEASE_COLORS[d] || '#94a3b8'; }
 
 let filtered = [...RAW];
 let groupBy = 'disease';
+let vizMode  = 'bar';
+
+function setVizMode(mode) {
+  vizMode = mode;
+  document.getElementById('btn-bar').style.background    = mode === 'bar'    ? 'var(--accent)' : 'var(--bg2)';
+  document.getElementById('btn-bar').style.color         = mode === 'bar'    ? '#fff'          : 'var(--muted)';
+  document.getElementById('btn-violin').style.background = mode === 'violin' ? 'var(--accent)' : 'var(--bg2)';
+  document.getElementById('btn-violin').style.color      = mode === 'violin' ? '#fff'          : 'var(--muted)';
+  renderCurrentTab();
+}
 const charts = {};
 
 function applyFilters() {
@@ -661,7 +707,7 @@ function renderOverview() {
   const cohKeys = Object.keys(coh).sort();
   makeChart('ch-cohort', {
     type: 'bar',
-    data: { labels: cohKeys, datasets: [{ label: 'Samples', data: cohKeys.map(k => coh[k]), backgroundColor: '#4f6ef7cc', borderRadius: 4 }] },
+    data: { labels: cohKeys, datasets: [{ label: 'Samples', data: cohKeys.map(k => coh[k]), backgroundColor: '#64748bcc', borderRadius: 4 }] },
     options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
   });
 
@@ -690,14 +736,183 @@ function renderOverview() {
 }
 
 // ── DEMOGRAPHICS ─────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════
+// VIOLIN + DOT ENGINE
+// ══════════════════════════════════════════════════════════
+function kernelDensity(values, bandwidth) {
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = max - min || 1;
+  const pts = 80;
+  const result = [];
+  for (let i = 0; i <= pts; i++) {
+    const x = min - range * 0.1 + (range * 1.2 * i) / pts;
+    let density = 0;
+    for (const v of values) {
+      const u = (x - v) / bandwidth;
+      density += Math.exp(-0.5 * u * u) / (bandwidth * Math.sqrt(2 * Math.PI));
+    }
+    result.push({ x, density: density / values.length });
+  }
+  return result;
+}
+
+function silverman(values) {
+  const n = values.length;
+  const mean = values.reduce((a,b) => a+b,0) / n;
+  const std  = Math.sqrt(values.reduce((a,b) => a + (b-mean)**2, 0) / n);
+  return 1.06 * std * Math.pow(n, -0.2) || 1;
+}
+
+function jitter(seed) {
+  // deterministic jitter so dots don't jump on re-render
+  let s = seed * 9301 + 49297;
+  return ((s % 233280) / 233280 - 0.5) * 0.7;
+}
+
+function makeViolinSVG(containerId, fieldSets, title) {
+  // fieldSets: [{label, values, color}]
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  const W = container.clientWidth || 400;
+  const H = 240;
+  const marginL = 42, marginR = 12, marginT = 12, marginB = 36;
+  const plotW = W - marginL - marginR;
+  const plotH = H - marginT - marginB;
+
+  // filter valid
+  const sets = fieldSets.map(s => ({ ...s, values: s.values.filter(v => v !== null && v !== undefined && !isNaN(v)) }))
+                         .filter(s => s.values.length > 1);
+  if (!sets.length) { container.innerHTML = '<p style="color:var(--muted);font-size:11px;padding:20px">No data</p>'; return; }
+
+  const allVals = sets.flatMap(s => s.values);
+  const globalMin = Math.min(...allVals);
+  const globalMax = Math.max(...allVals);
+  const pad = (globalMax - globalMin) * 0.08 || 1;
+  const yMin = globalMin - pad, yMax = globalMax + pad;
+
+  const yScale = v => marginT + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+  const slotW  = plotW / sets.length;
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.style.width = '100%';
+  svg.style.height = H + 'px';
+
+  // Y grid lines + labels
+  const ticks = 5;
+  for (let i = 0; i <= ticks; i++) {
+    const val = yMin + (yMax - yMin) * (i / ticks);
+    const y   = yScale(val);
+    const line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', marginL); line.setAttribute('x2', W - marginR);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('stroke', '#e5e7eb'); line.setAttribute('stroke-width', '0.8');
+    svg.appendChild(line);
+    const txt = document.createElementNS(svgNS, 'text');
+    txt.setAttribute('x', marginL - 5); txt.setAttribute('y', y + 3.5);
+    txt.setAttribute('text-anchor', 'end');
+    txt.setAttribute('font-size', '9'); txt.setAttribute('fill', '#9ca3af');
+    txt.setAttribute('font-family', "Space Mono, monospace");
+    txt.textContent = val.toFixed(1);
+    svg.appendChild(txt);
+  }
+
+  sets.forEach((s, si) => {
+    const bw   = silverman(s.values);
+    const kde  = kernelDensity(s.values, bw);
+    const maxD = Math.max(...kde.map(p => p.density));
+    const halfW = slotW * 0.38;
+    const cx   = marginL + slotW * si + slotW / 2;
+
+    // Build violin path
+    const leftPts  = kde.map(p => ({ x: cx - (p.density / maxD) * halfW, y: yScale(p.x) }));
+    const rightPts = [...kde].reverse().map(p => ({ x: cx + (p.density / maxD) * halfW, y: yScale(p.x) }));
+    const allPts   = [...leftPts, ...rightPts];
+    const d = allPts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + ' Z';
+
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('fill', s.color + '33');
+    path.setAttribute('stroke', s.color);
+    path.setAttribute('stroke-width', '1.5');
+    svg.appendChild(path);
+
+    // Median line
+    const sorted = [...s.values].sort((a,b) => a-b);
+    const med = sorted[Math.floor(sorted.length / 2)];
+    const iqr1 = sorted[Math.floor(sorted.length * 0.25)];
+    const iqr3 = sorted[Math.floor(sorted.length * 0.75)];
+
+    // IQR box
+    const box = document.createElementNS(svgNS, 'rect');
+    box.setAttribute('x', cx - halfW * 0.28); box.setAttribute('width', halfW * 0.56);
+    box.setAttribute('y', yScale(iqr3)); box.setAttribute('height', Math.abs(yScale(iqr1) - yScale(iqr3)));
+    box.setAttribute('fill', s.color + '55'); box.setAttribute('stroke', s.color); box.setAttribute('stroke-width','1');
+    svg.appendChild(box);
+
+    // Median
+    const mline = document.createElementNS(svgNS, 'line');
+    mline.setAttribute('x1', cx - halfW * 0.28); mline.setAttribute('x2', cx + halfW * 0.28);
+    mline.setAttribute('y1', yScale(med)); mline.setAttribute('y2', yScale(med));
+    mline.setAttribute('stroke', s.color); mline.setAttribute('stroke-width', '2.5');
+    svg.appendChild(mline);
+
+    // Jittered dots
+    s.values.forEach((v, vi) => {
+      const jx = cx + jitter(si * 1000 + vi) * halfW * 0.6;
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', jx.toFixed(1));
+      circle.setAttribute('cy', yScale(v).toFixed(1));
+      circle.setAttribute('r', '2.2');
+      circle.setAttribute('fill', s.color);
+      circle.setAttribute('opacity', '0.45');
+      svg.appendChild(circle);
+    });
+
+    // X label
+    const lbl = document.createElementNS(svgNS, 'text');
+    lbl.setAttribute('x', cx); lbl.setAttribute('y', H - 6);
+    lbl.setAttribute('text-anchor', 'middle');
+    lbl.setAttribute('font-size', '10'); lbl.setAttribute('fill', '#6b7280');
+    lbl.setAttribute('font-family', "DM Sans, sans-serif");
+    lbl.textContent = s.label.length > 14 ? s.label.slice(0,13) + '…' : s.label;
+    svg.appendChild(lbl);
+
+    // n label
+    const nlbl = document.createElementNS(svgNS, 'text');
+    nlbl.setAttribute('x', cx); nlbl.setAttribute('y', H - 18);
+    nlbl.setAttribute('text-anchor', 'middle');
+    nlbl.setAttribute('font-size', '8.5'); nlbl.setAttribute('fill', '#9ca3af');
+    nlbl.setAttribute('font-family', "Space Mono, monospace");
+    nlbl.textContent = `n=${s.values.length}`;
+    svg.appendChild(nlbl);
+  });
+
+  container.appendChild(svg);
+}
+
+function violinCard(containerId, label, field, groups) {
+  const sets = groups.map((g, i) => ({
+    label: g,
+    color: groupColor(g, i),
+    values: filtered.filter(r => groupKey(r) === g && r[field] !== null && r[field] !== undefined && r[field] !== '').map(r => +r[field])
+  }));
+  makeViolinSVG(containerId, sets, label);
+}
+
 function renderDemographics() {
+  const groups = getGroups(filtered);
+  // categorical charts always shown as-is
   const sex = countBy(filtered.filter(r => r.sex), 'sex');
   makeChart('ch-sex', {
     type: 'doughnut',
     data: { labels: Object.keys(sex), datasets: [{ data: Object.values(sex), backgroundColor: ['#4f6ef7','#059669','#9ca3af'], borderWidth: 2 }] },
     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
   });
-
   const race = countBy(filtered.filter(r => r.race), 'race');
   const raceK = Object.keys(race);
   makeChart('ch-race', {
@@ -705,17 +920,26 @@ function renderDemographics() {
     data: { labels: raceK, datasets: [{ label: 'Count', data: raceK.map(k => race[k]), backgroundColor: '#8b5cf6cc', borderRadius: 4 }] },
     options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
   });
-
-  makeChart('ch-age', meanBarByGroup(filtered.filter(r => r.age), 'age', 'Mean Age (years)'));
-
   const sm = countBy(filtered.filter(r => r.smoking), 'smoking');
   makeChart('ch-smoking', {
     type: 'doughnut',
     data: { labels: Object.keys(sm), datasets: [{ data: Object.values(sm), backgroundColor: ['#d97706','#dc2626','#059669','#9ca3af','#4f6ef7'], borderWidth: 2 }] },
     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
   });
-
-  makeChart('ch-bmi', meanBarByGroup(filtered.filter(r => r.bmi), 'bmi', 'Mean BMI'));
+  // continuous: age, bmi
+  if (vizMode === 'violin') {
+    document.getElementById('ch-age').closest('.chart-card').style.display = 'none';
+    document.getElementById('ch-bmi').closest('.chart-card').style.display = 'none';
+    document.getElementById('vln-demo-cont').style.display = '';
+    violinCard('vln-age', 'Age (years)', 'age', groups);
+    violinCard('vln-bmi', 'BMI', 'bmi', groups);
+  } else {
+    document.getElementById('ch-age').closest('.chart-card').style.display = '';
+    document.getElementById('ch-bmi').closest('.chart-card').style.display = '';
+    document.getElementById('vln-demo-cont').style.display = 'none';
+    makeChart('ch-age', meanBarByGroup(filtered.filter(r => r.age), 'age', 'Mean Age (years)'));
+    makeChart('ch-bmi', meanBarByGroup(filtered.filter(r => r.bmi), 'bmi', 'Mean BMI'));
+  }
 }
 
 // ── SEROLOGY ─────────────────────────────────────────────
@@ -788,8 +1012,19 @@ function renderDiseaseActivity() {
 
   catStackedBar('das28_cat', ['Remission','Low','Moderate','High'], 'ch-das28-cat');
   catStackedBar('cdai_cat',  ['Remission','Low','Moderate','High'], 'ch-cdai-cat');
-  makeChart('ch-das28-dist', meanBarByGroup(filtered.filter(r => r.das28), 'das28', 'Mean DAS28-ESR'));
-  makeChart('ch-radur',      meanBarByGroup(filtered.filter(r => r.ra_dur), 'ra_dur', 'Mean RA Duration (yrs)'));
+  if (vizMode === 'violin') {
+    document.getElementById('ch-das28-dist').closest('.chart-card').style.display = 'none';
+    document.getElementById('ch-radur').closest('.chart-card').style.display = 'none';
+    document.getElementById('vln-disease-cont').style.display = '';
+    violinCard('vln-das28', 'DAS28-ESR', 'das28', groups);
+    violinCard('vln-radur', 'RA Duration (yrs)', 'ra_dur', groups);
+  } else {
+    document.getElementById('ch-das28-dist').closest('.chart-card').style.display = '';
+    document.getElementById('ch-radur').closest('.chart-card').style.display = '';
+    document.getElementById('vln-disease-cont').style.display = 'none';
+    makeChart('ch-das28-dist', meanBarByGroup(filtered.filter(r => r.das28), 'das28', 'Mean DAS28-ESR'));
+    makeChart('ch-radur',      meanBarByGroup(filtered.filter(r => r.ra_dur), 'ra_dur', 'Mean RA Duration (yrs)'));
+  }
 }
 
 // ── IMAGING ───────────────────────────────────────────────
@@ -829,23 +1064,41 @@ function renderImaging() {
   });
 
   const indiv = [
-    { f: 'interstitial', c: 'ch-interstitial', l: '% Interstitial' },
-    { f: 'reticular',    c: 'ch-reticular',    l: '% Reticular' },
-    { f: 'honeycombing', c: 'ch-honey',         l: '% Honeycombing' },
-    { f: 'ground_glass', c: 'ch-gg',            l: '% Ground Glass' },
-    { f: 'emphysema',    c: 'ch-emph',          l: '% Emphysema' },
+    { f: 'interstitial', c: 'ch-interstitial', l: '% Interstitial', v: 'vln-interstitial' },
+    { f: 'reticular',    c: 'ch-reticular',    l: '% Reticular',    v: 'vln-reticular'    },
+    { f: 'honeycombing', c: 'ch-honey',         l: '% Honeycombing', v: 'vln-honey'        },
+    { f: 'ground_glass', c: 'ch-gg',            l: '% Ground Glass', v: 'vln-gg'           },
+    { f: 'emphysema',    c: 'ch-emph',          l: '% Emphysema',    v: 'vln-emph'         },
   ];
-  indiv.forEach(({ f, c, l }) => makeChart(c, meanBarByGroup(filtered.filter(r => r[f] !== null && r[f] >= 0), f, l)));
+  if (vizMode === 'violin') {
+    indiv.forEach(({ c }) => document.getElementById(c).closest('.chart-card').style.display = 'none');
+    document.getElementById('vln-img-cont').style.display = '';
+    indiv.forEach(({ f, l, v }) => violinCard(v, l, f, groups));
+  } else {
+    indiv.forEach(({ c }) => document.getElementById(c).closest('.chart-card').style.display = '');
+    document.getElementById('vln-img-cont').style.display = 'none';
+    indiv.forEach(({ f, c, l }) => makeChart(c, meanBarByGroup(filtered.filter(r => r[f] !== null && r[f] >= 0), f, l)));
+  }
 }
 
 // ── PFTs ─────────────────────────────────────────────────
 function renderPFTs() {
-  [
-    { f: 'fev1pp', c: 'ch-fev1',  l: 'FEV1 %predicted' },
-    { f: 'fvcpp',  c: 'ch-fvc',   l: 'FVC %predicted' },
-    { f: 'dlcopp', c: 'ch-dlco',  l: 'DLCO %predicted' },
-    { f: 'fev1fvc',c: 'ch-ratio', l: 'FEV1/FVC' },
-  ].forEach(({ f, c, l }) => makeChart(c, meanBarByGroup(filtered.filter(r => r[f] !== null && r[f] > 0), f, l)));
+  const groups = getGroups(filtered);
+  const pftFields = [
+    { f: 'fev1pp', c: 'ch-fev1',   l: 'FEV1 %predicted',  v: 'vln-fev1'  },
+    { f: 'fvcpp',  c: 'ch-fvc',    l: 'FVC %predicted',   v: 'vln-fvc'   },
+    { f: 'dlcopp', c: 'ch-dlco',   l: 'DLCO %predicted',  v: 'vln-dlco'  },
+    { f: 'fev1fvc',c: 'ch-ratio',  l: 'FEV1/FVC',         v: 'vln-ratio' },
+  ];
+  if (vizMode === 'violin') {
+    pftFields.forEach(({ f, c }) => document.getElementById(c).closest('.chart-card').style.display = 'none');
+    document.getElementById('vln-pfts-cont').style.display = '';
+    pftFields.forEach(({ f, l, v }) => violinCard(v, l, f, groups));
+  } else {
+    pftFields.forEach(({ f, c }) => document.getElementById(c).closest('.chart-card').style.display = '');
+    document.getElementById('vln-pfts-cont').style.display = 'none';
+    pftFields.forEach(({ f, c, l }) => makeChart(c, meanBarByGroup(filtered.filter(r => r[f] !== null && r[f] > 0), f, l)));
+  }
 }
 
 // ── MEDICATIONS ──────────────────────────────────────────
@@ -929,7 +1182,7 @@ function renderMissingness() {
   ];
 
   const isPresent = v => v !== null && v !== undefined && v !== '';
-  const pctColor  = p => p >= 80 ? '#10b981' : p >= 50 ? '#f59e0b' : '#ef4444';
+  const pctColor  = p => p >= 80 ? '#0d9488' : p >= 50 ? '#d97706' : '#dc2626';
   const pctCell   = (present, n) => {
     const pct = n ? Math.round(100 * present / n) : 0;
     const c = pctColor(pct);
@@ -994,12 +1247,12 @@ function renderMissingness() {
 Chart.defaults.color = '#6b7280';
 Chart.defaults.borderColor = '#e5e7eb';
 Chart.defaults.backgroundColor = 'rgba(79,110,247,0.08)';
-Chart.defaults.font.family = "'Geist', sans-serif";
+Chart.defaults.font.family = "'DM Sans', sans-serif";
 Chart.defaults.font.size = 11;
 Chart.defaults.font.weight = '400';
-Chart.defaults.plugins.legend.labels.font = { family: "'Geist', sans-serif", size: 11 };
-Chart.defaults.plugins.tooltip.titleFont = { family: "'Geist Mono', monospace", size: 11, weight: '500' };
-Chart.defaults.plugins.tooltip.bodyFont  = { family: "'Geist', sans-serif", size: 11 };
+Chart.defaults.plugins.legend.labels.font = { family: "'DM Sans', sans-serif", size: 11 };
+Chart.defaults.plugins.tooltip.titleFont = { family: "'Space Mono', monospace", size: 10, weight: '700' };
+Chart.defaults.plugins.tooltip.bodyFont  = { family: "'DM Sans', sans-serif", size: 11 };
 Chart.defaults.plugins.tooltip.padding   = 10;
 Chart.defaults.plugins.tooltip.cornerRadius = 4;
 Chart.defaults.plugins.tooltip.backgroundColor = '#1e2433';
@@ -1007,7 +1260,7 @@ Chart.defaults.plugins.tooltip.titleColor = '#f9fafb';
 Chart.defaults.plugins.tooltip.bodyColor  = '#9ca3af';
 Chart.defaults.plugins.tooltip.borderColor = 'rgba(255,255,255,.08)';
 Chart.defaults.plugins.tooltip.borderWidth = 1;
-Chart.defaults.scale.ticks.font = { family: "'Geist Mono', monospace", size: 10 };
+Chart.defaults.scale.ticks.font = { family: "'Space Mono', monospace", size: 9 };
 
 (function init() {
   const cohorts = [...new Set(RAW.map(r => r.cohort))].sort();
