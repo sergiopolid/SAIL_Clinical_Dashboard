@@ -206,8 +206,8 @@ tbody tr:last-child td{border-bottom:none}
   <!-- MISSINGNESS -->
   <div class="tab-panel" id="tab-missingness">
     <div class="tbl-wrap" style="max-height:75vh">
-      <table>
-        <thead><tr><th>Field</th><th>Category</th><th>n present</th><th>% complete</th><th>Completeness</th></tr></thead>
+      <table id="miss-table">
+        <thead id="miss-thead"></thead>
         <tbody id="miss-tbody"></tbody>
       </table>
     </div>
@@ -619,33 +619,80 @@ function renderTable() {
 // ── MISSINGNESS ──────────────────────────────────────────
 function renderMissingness() {
   const fields = [
-    { f: 'age',        cat: 'Demographics'    }, { f: 'sex',        cat: 'Demographics'    },
-    { f: 'race',       cat: 'Demographics'    }, { f: 'smoking',    cat: 'Demographics'    },
-    { f: 'bmi',        cat: 'Demographics'    },
-    { f: 'ccp_pos',    cat: 'Serology'        }, { f: 'rf_pos',     cat: 'Serology'        },
-    { f: 'seropos',    cat: 'Serology'        }, { f: 'ccp_titer',  cat: 'Serology'        },
-    { f: 'rf_titer',   cat: 'Serology'        },
-    { f: 'das28',      cat: 'Disease Activity'}, { f: 'das28_cat',  cat: 'Disease Activity'},
-    { f: 'cdai',       cat: 'Disease Activity'}, { f: 'ra_dur',     cat: 'Disease Activity'},
-    { f: 'fev1pp',     cat: 'PFTs'            }, { f: 'fvcpp',      cat: 'PFTs'            },
-    { f: 'dlcopp',     cat: 'PFTs'            }, { f: 'fev1fvc',    cat: 'PFTs'            },
-    { f: 'reticular',  cat: 'Imaging'         }, { f: 'honeycombing',cat: 'Imaging'        },
-    { f: 'interstitial',cat: 'Imaging'        }, { f: 'ground_glass',cat: 'Imaging'        },
-    { f: 'emphysema',  cat: 'Imaging'         },
-    { f: 'mtx',        cat: 'Medications'     }, { f: 'hcq',        cat: 'Medications'     },
-    { f: 'tnfi',       cat: 'Medications'     }, { f: 'steroids',   cat: 'Medications'     }
+    { f: 'age',         cat: 'Demographics'    }, { f: 'sex',         cat: 'Demographics'    },
+    { f: 'race',        cat: 'Demographics'    }, { f: 'smoking',     cat: 'Demographics'    },
+    { f: 'bmi',         cat: 'Demographics'    },
+    { f: 'ccp_pos',     cat: 'Serology'        }, { f: 'rf_pos',      cat: 'Serology'        },
+    { f: 'seropos',     cat: 'Serology'        }, { f: 'ccp_titer',   cat: 'Serology'        },
+    { f: 'rf_titer',    cat: 'Serology'        },
+    { f: 'das28',       cat: 'Disease Activity'}, { f: 'das28_cat',   cat: 'Disease Activity'},
+    { f: 'cdai',        cat: 'Disease Activity'}, { f: 'ra_dur',      cat: 'Disease Activity'},
+    { f: 'fev1pp',      cat: 'PFTs'            }, { f: 'fvcpp',       cat: 'PFTs'            },
+    { f: 'dlcopp',      cat: 'PFTs'            }, { f: 'fev1fvc',     cat: 'PFTs'            },
+    { f: 'reticular',   cat: 'Imaging'         }, { f: 'honeycombing',cat: 'Imaging'         },
+    { f: 'interstitial',cat: 'Imaging'         }, { f: 'ground_glass',cat: 'Imaging'         },
+    { f: 'emphysema',   cat: 'Imaging'         },
+    { f: 'mtx',         cat: 'Medications'     }, { f: 'hcq',         cat: 'Medications'     },
+    { f: 'tnfi',        cat: 'Medications'     }, { f: 'steroids',    cat: 'Medications'     }
   ];
-  const n = filtered.length;
-  const tbody = document.getElementById('miss-tbody');
-  tbody.innerHTML = '';
-  fields.forEach(({ f, cat }) => {
-    const present = filtered.filter(r => r[f] !== null && r[f] !== undefined && r[f] !== '').length;
+
+  const isPresent = v => v !== null && v !== undefined && v !== '';
+  const pctColor  = p => p >= 80 ? '#10b981' : p >= 50 ? '#f59e0b' : '#ef4444';
+  const pctCell   = (present, n) => {
     const pct = n ? Math.round(100 * present / n) : 0;
-    const color = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+    const c = pctColor(pct);
+    return `<td style="font-weight:600;color:${c};text-align:center">${pct}%<br><small style="font-weight:400;color:#94a3b8">${present}/${n}</small></td>
+            <td><div class="miss-bar"><div class="miss-fill" style="width:${pct}%;background:${c}"></div></div></td>`;
+  };
+
+  const groups  = getGroups(filtered);
+  const thead   = document.getElementById('miss-thead');
+  const tbody   = document.getElementById('miss-tbody');
+
+  // Build header
+  if (groups.length > 1) {
+    thead.innerHTML = `<tr>
+      <th>Field</th><th>Category</th>
+      ${groups.map((g,i) => `<th style="color:${groupColor(g,i)}">${g}</th><th></th>`).join('')}
+      <th>Overall</th><th></th>
+    </tr>`;
+  } else {
+    thead.innerHTML = `<tr><th>Field</th><th>Category</th><th style="text-align:center">n present / % complete</th><th>Completeness</th></tr>`;
+  }
+
+  tbody.innerHTML = '';
+  let lastCat = null;
+
+  fields.forEach(({ f, cat }) => {
     const row = document.createElement('tr');
-    row.innerHTML = `<td><code>${f}</code></td><td>${cat}</td><td>${present}/${n}</td>
-      <td style="font-weight:600;color:${color}">${pct}%</td>
-      <td><div class="miss-bar"><div class="miss-fill" style="width:${pct}%;background:${color}"></div></div></td>`;
+
+    // Category separator row
+    if (cat !== lastCat) {
+      lastCat = cat;
+      const sepCols = groups.length > 1 ? groups.length * 2 + 3 : 4;
+      const sep = document.createElement('tr');
+      sep.innerHTML = `<td colspan="${sepCols}" style="background:#f0f4f8;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#64748b;padding:6px 12px">${cat}</td>`;
+      tbody.appendChild(sep);
+    }
+
+    if (groups.length > 1) {
+      // Per-group columns
+      const groupCells = groups.map(g => {
+        const sub = filtered.filter(r => groupKey(r) === g);
+        const present = sub.filter(r => isPresent(r[f])).length;
+        return pctCell(present, sub.length);
+      }).join('');
+      const overallPresent = filtered.filter(r => isPresent(r[f])).length;
+      row.innerHTML = `<td><code>${f}</code></td><td style="color:#94a3b8;font-size:11px">${cat}</td>${groupCells}${pctCell(overallPresent, filtered.length)}`;
+    } else {
+      const present = filtered.filter(r => isPresent(r[f])).length;
+      const n = filtered.length;
+      const pct = n ? Math.round(100 * present / n) : 0;
+      const c = pctColor(pct);
+      row.innerHTML = `<td><code>${f}</code></td><td style="color:#94a3b8;font-size:11px">${cat}</td>
+        <td style="font-weight:600;color:${c};text-align:center">${pct}% <small style="font-weight:400;color:#94a3b8">(${present}/${n})</small></td>
+        <td><div class="miss-bar"><div class="miss-fill" style="width:${pct}%;background:${c}"></div></div></td>`;
+    }
     tbody.appendChild(row);
   });
 }
