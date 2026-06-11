@@ -366,6 +366,126 @@ tbody tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
+<style>
+#pw-gate{
+  position:fixed;inset:0;z-index:99999;
+  background:#f7f8fa;
+  display:flex;align-items:center;justify-content:center;
+}
+#pw-box{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  padding:40px 44px;
+  width:360px;
+  box-shadow:0 4px 24px rgba(0,0,0,.08);
+  text-align:center;
+}
+#pw-box .pw-logo{
+  font-family:'Playfair Display',serif;
+  font-size:26px;
+  color:#111827;
+  margin-bottom:4px;
+  letter-spacing:-.3px;
+}
+#pw-box .pw-sub{
+  font-family:'Space Mono',monospace;
+  font-size:9px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:#9ca3af;
+  margin-bottom:28px;
+}
+#pw-box .pw-label{
+  font-family:'Space Mono',monospace;
+  font-size:9.5px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#6b7280;
+  display:block;
+  text-align:left;
+  margin-bottom:6px;
+}
+#pw-input{
+  width:100%;
+  border:1px solid #d1d5db;
+  border-radius:6px;
+  padding:10px 12px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:#111827;
+  outline:none;
+  transition:border-color .12s;
+  margin-bottom:14px;
+}
+#pw-input:focus{border-color:#4f6ef7}
+#pw-btn{
+  width:100%;
+  background:#1e2433;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:10px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background .12s;
+}
+#pw-btn:hover{background:#2d3748}
+#pw-err{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  color:#dc2626;
+  margin-top:10px;
+  min-height:18px;
+}
+</style>
+
+<div id="pw-gate">
+  <div id="pw-box">
+    <div class="pw-logo">SAIL&#8209;RA</div>
+    <div class="pw-sub">Clinical Dashboard · Restricted Access</div>
+    <label class="pw-label" for="pw-input">Password</label>
+    <input id="pw-input" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button id="pw-btn" onclick="checkPw()">Access Dashboard</button>
+    <div id="pw-err"></div>
+  </div>
+</div>
+
+<script>
+// SHA-256 hash of the password — raw password never stored in source
+// Current hash = SHA-256("SAILRA2025")
+const PW_HASH = '34d1d0a0ff6c969a06c0749c4d0c58df497d2e863b58f281d2d1bec22d985b72';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function checkPw() {
+  const val = document.getElementById('pw-input').value;
+  const hash = await sha256(val);
+  if (hash === PW_HASH) {
+    sessionStorage.setItem('sailra_auth', hash);
+    document.getElementById('pw-gate').style.display = 'none';
+  } else {
+    const err = document.getElementById('pw-err');
+    err.textContent = 'Incorrect password. Please try again.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+// Check session so refresh doesn't re-prompt
+(async () => {
+  const stored = sessionStorage.getItem('sailra_auth');
+  if (stored && stored === PW_HASH) {
+    document.getElementById('pw-gate').style.display = 'none';
+  }
+})();
+</script>
+
 <div class="layout">
 <nav class="sidebar">
   <div class="sidebar-title">
