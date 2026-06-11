@@ -530,6 +530,7 @@ async function checkPw() {
       <div id="viz-toggle" style="display:flex;border:1px solid var(--border2);border-radius:6px;overflow:hidden">
         <button id="btn-bar"    onclick="setVizMode('bar')"    style="padding:4px 11px;font-size:11.5px;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:all .12s">Bar</button>
         <button id="btn-violin" onclick="setVizMode('violin')" style="padding:4px 11px;font-size:11.5px;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--bg2);color:var(--muted);transition:all .12s">Violin</button>
+        <button id="btn-hist"   onclick="setVizMode('hist')"   style="padding:4px 11px;font-size:11.5px;font-family:'DM Sans',sans-serif;border:none;cursor:pointer;background:var(--bg2);color:var(--muted);transition:all .12s">Histogram</button>
       </div>
       <button class="reset-btn" onclick="resetFilters()">↺ Reset</button>
     </div>
@@ -609,6 +610,13 @@ async function checkPw() {
       <div class="violin-card"><h3>% Ground Glass</h3><div id="vln-gg"></div></div>
       <div class="violin-card"><h3>% Emphysema</h3><div id="vln-emph"></div></div>
     </div>
+    <div id="hist-img-cont" style="display:none" class="violin-grid">
+      <div class="violin-card"><h3>% Interstitial</h3><div id="hist-interstitial"></div></div>
+      <div class="violin-card"><h3>% Reticular</h3><div id="hist-reticular"></div></div>
+      <div class="violin-card"><h3>% Honeycombing</h3><div id="hist-honey"></div></div>
+      <div class="violin-card"><h3>% Ground Glass</h3><div id="hist-gg"></div></div>
+      <div class="violin-card"><h3>% Emphysema</h3><div id="hist-emph"></div></div>
+    </div>
   </div>
 
   <!-- PFTs -->
@@ -680,10 +688,12 @@ let vizMode  = 'bar';
 
 function setVizMode(mode) {
   vizMode = mode;
-  document.getElementById('btn-bar').style.background    = mode === 'bar'    ? 'var(--accent)' : 'var(--bg2)';
-  document.getElementById('btn-bar').style.color         = mode === 'bar'    ? '#fff'          : 'var(--muted)';
-  document.getElementById('btn-violin').style.background = mode === 'violin' ? 'var(--accent)' : 'var(--bg2)';
-  document.getElementById('btn-violin').style.color      = mode === 'violin' ? '#fff'          : 'var(--muted)';
+  ['bar','violin','hist'].forEach(m => {
+    const btn = document.getElementById('btn-' + m);
+    if (!btn) return;
+    btn.style.background = mode === m ? 'var(--accent)' : 'var(--bg2)';
+    btn.style.color      = mode === m ? '#fff'          : 'var(--muted)';
+  });
   renderCurrentTab();
 }
 const charts = {};
@@ -856,6 +866,189 @@ function renderOverview() {
 }
 
 // ── DEMOGRAPHICS ─────────────────────────────────────────
+
+
+// ══════════════════════════════════════════════════════════
+// HISTOGRAM ENGINE (SVG, stacked vertically, shared x-axis)
+// ══════════════════════════════════════════════════════════
+function makeHistogramSVG(containerId, fieldSets, xLabel, nBins) {
+  nBins = nBins || 25;
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  const sets = fieldSets
+    .map(s => ({ ...s, values: s.values.filter(v => v !== null && v !== undefined && !isNaN(v) && v >= 0) }))
+    .filter(s => s.values.length > 0);
+  if (!sets.length) {
+    container.innerHTML = '<p style="color:var(--muted);font-size:11px;padding:20px">No data</p>';
+    return;
+  }
+
+  // Shared x range across all groups
+  const allVals = sets.flatMap(s => s.values);
+  const xMin = Math.min(...allVals);
+  const xMax = Math.max(...allVals);
+  const range = xMax - xMin || 1;
+  const binW  = range / nBins;
+
+  // Build bins for each group using the shared x range
+  const binned = sets.map(s => {
+    const bins = Array.from({ length: nBins }, (_, i) => ({
+      x0: xMin + i * binW,
+      x1: xMin + (i + 1) * binW,
+      count: 0
+    }));
+    s.values.forEach(v => {
+      let idx = Math.floor((v - xMin) / binW);
+      if (idx >= nBins) idx = nBins - 1;
+      if (idx < 0) idx = 0;
+      bins[idx].count++;
+    });
+    return bins;
+  });
+
+  // Layout — one panel per group, stacked vertically
+  const W       = container.clientWidth || 420;
+  const panelH  = 110;   // height of each group panel
+  const mL      = 44;
+  const mR      = 14;
+  const mTop    = 10;    // top margin of first panel
+  const mBetween= 6;     // gap between panels
+  const mBottom = 38;    // space for shared x-axis
+  const nPanels = sets.length;
+  const totalH  = mTop + nPanels * panelH + (nPanels - 1) * mBetween + mBottom;
+  const plotW   = W - mL - mR;
+
+  const xScale  = v => mL + ((v - xMin) / range) * plotW;
+  const svgNS   = 'http://www.w3.org/2000/svg';
+  const svg     = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${totalH}`);
+  svg.style.width  = '100%';
+  svg.style.height = totalH + 'px';
+
+  // Draw each panel
+  sets.forEach((s, si) => {
+    const bins    = binned[si];
+    const maxCount= Math.max(...bins.map(b => b.count), 1);
+    const panelY  = mTop + si * (panelH + mBetween);
+    const yScale  = c => panelY + panelH - (c / maxCount) * panelH;
+
+    // Panel background
+    const bg = document.createElementNS(svgNS, 'rect');
+    bg.setAttribute('x', mL); bg.setAttribute('y', panelY);
+    bg.setAttribute('width', plotW); bg.setAttribute('height', panelH);
+    bg.setAttribute('fill', '#f9fafb'); bg.setAttribute('rx', '2');
+    svg.appendChild(bg);
+
+    // Y grid lines + labels (3 ticks per panel)
+    [0, 0.5, 1].forEach(frac => {
+      const c = Math.round(maxCount * frac);
+      const y = yScale(c);
+      const gl = document.createElementNS(svgNS, 'line');
+      gl.setAttribute('x1', mL); gl.setAttribute('x2', W - mR);
+      gl.setAttribute('y1', y); gl.setAttribute('y2', y);
+      gl.setAttribute('stroke', '#e5e7eb'); gl.setAttribute('stroke-width', '0.7');
+      svg.appendChild(gl);
+      const gt = document.createElementNS(svgNS, 'text');
+      gt.setAttribute('x', mL - 4); gt.setAttribute('y', y + 3);
+      gt.setAttribute('text-anchor', 'end');
+      gt.setAttribute('font-size', '8'); gt.setAttribute('fill', '#9ca3af');
+      gt.setAttribute('font-family', 'Space Mono, monospace');
+      gt.textContent = c;
+      svg.appendChild(gt);
+    });
+
+    // Group label (left, rotated)
+    const labelEl = document.createElementNS(svgNS, 'text');
+    const lx = 10;
+    const ly = panelY + panelH / 2;
+    labelEl.setAttribute('x', lx); labelEl.setAttribute('y', ly);
+    labelEl.setAttribute('text-anchor', 'middle');
+    labelEl.setAttribute('transform', `rotate(-90, ${lx}, ${ly})`);
+    labelEl.setAttribute('font-size', '9'); labelEl.setAttribute('fill', s.color);
+    labelEl.setAttribute('font-family', 'DM Sans, sans-serif');
+    labelEl.setAttribute('font-weight', '600');
+    const shortLabel = s.label.length > 11 ? s.label.slice(0,10) + '…' : s.label;
+    labelEl.textContent = shortLabel;
+    svg.appendChild(labelEl);
+
+    // n label top-right of panel
+    const nEl = document.createElementNS(svgNS, 'text');
+    nEl.setAttribute('x', W - mR - 4); nEl.setAttribute('y', panelY + 11);
+    nEl.setAttribute('text-anchor', 'end');
+    nEl.setAttribute('font-size', '8'); nEl.setAttribute('fill', '#9ca3af');
+    nEl.setAttribute('font-family', 'Space Mono, monospace');
+    nEl.textContent = `n=${s.values.length}`;
+    svg.appendChild(nEl);
+
+    // Histogram bars
+    bins.forEach(bin => {
+      if (bin.count === 0) return;
+      const x = xScale(bin.x0);
+      const w = Math.max(1, xScale(bin.x1) - xScale(bin.x0) - 0.8);
+      const y = yScale(bin.count);
+      const h = panelY + panelH - y;
+      const rect = document.createElementNS(svgNS, 'rect');
+      rect.setAttribute('x', x.toFixed(1));
+      rect.setAttribute('y', y.toFixed(1));
+      rect.setAttribute('width', w.toFixed(1));
+      rect.setAttribute('height', h.toFixed(1));
+      rect.setAttribute('fill', s.color);
+      rect.setAttribute('opacity', '0.75');
+      svg.appendChild(rect);
+    });
+
+    // Panel bottom border
+    const bline = document.createElementNS(svgNS, 'line');
+    bline.setAttribute('x1', mL); bline.setAttribute('x2', W - mR);
+    bline.setAttribute('y1', panelY + panelH); bline.setAttribute('y2', panelY + panelH);
+    bline.setAttribute('stroke', '#d1d5db'); bline.setAttribute('stroke-width', '0.8');
+    svg.appendChild(bline);
+  });
+
+  // Shared X axis ticks (below all panels)
+  const axisY = mTop + nPanels * (panelH + mBetween) - mBetween;
+  const xTickCount = 6;
+  for (let i = 0; i <= xTickCount; i++) {
+    const v = xMin + range * i / xTickCount;
+    const x = xScale(v);
+    const tick = document.createElementNS(svgNS, 'line');
+    tick.setAttribute('x1', x); tick.setAttribute('x2', x);
+    tick.setAttribute('y1', axisY); tick.setAttribute('y2', axisY + 4);
+    tick.setAttribute('stroke', '#d1d5db'); tick.setAttribute('stroke-width', '1');
+    svg.appendChild(tick);
+    const xt = document.createElementNS(svgNS, 'text');
+    xt.setAttribute('x', x); xt.setAttribute('y', axisY + 14);
+    xt.setAttribute('text-anchor', 'middle');
+    xt.setAttribute('font-size', '8.5'); xt.setAttribute('fill', '#9ca3af');
+    xt.setAttribute('font-family', 'Space Mono, monospace');
+    xt.textContent = v < 0.01 ? v.toExponential(1) : v.toFixed(v < 1 ? 2 : 1);
+    svg.appendChild(xt);
+  }
+
+  // X axis label
+  const xl = document.createElementNS(svgNS, 'text');
+  xl.setAttribute('x', mL + plotW / 2); xl.setAttribute('y', axisY + 30);
+  xl.setAttribute('text-anchor', 'middle');
+  xl.setAttribute('font-size', '10'); xl.setAttribute('fill', '#6b7280');
+  xl.setAttribute('font-family', 'DM Sans, sans-serif');
+  xl.textContent = xLabel;
+  svg.appendChild(xl);
+
+  container.appendChild(svg);
+}
+
+function histCard(containerId, label, field, groups) {
+  const sets = groups.map((g, i) => ({
+    label: g,
+    color: groupColor(g, i),
+    values: filtered
+      .filter(r => groupKey(r) === g && r[field] !== null && r[field] !== undefined && r[field] !== '')
+      .map(r => +r[field])
+  }));
+  makeHistogramSVG(containerId, sets, label, 25);
+}
 
 // ══════════════════════════════════════════════════════════
 // VIOLIN + DOT ENGINE
@@ -1184,19 +1377,26 @@ function renderImaging() {
   });
 
   const indiv = [
-    { f: 'interstitial', c: 'ch-interstitial', l: '% Interstitial', v: 'vln-interstitial' },
-    { f: 'reticular',    c: 'ch-reticular',    l: '% Reticular',    v: 'vln-reticular'    },
-    { f: 'honeycombing', c: 'ch-honey',         l: '% Honeycombing', v: 'vln-honey'        },
-    { f: 'ground_glass', c: 'ch-gg',            l: '% Ground Glass', v: 'vln-gg'           },
-    { f: 'emphysema',    c: 'ch-emph',          l: '% Emphysema',    v: 'vln-emph'         },
+    { f: 'interstitial', c: 'ch-interstitial', l: '% Interstitial', v: 'vln-interstitial', h: 'hist-interstitial' },
+    { f: 'reticular',    c: 'ch-reticular',    l: '% Reticular',    v: 'vln-reticular',    h: 'hist-reticular'    },
+    { f: 'honeycombing', c: 'ch-honey',         l: '% Honeycombing', v: 'vln-honey',        h: 'hist-honey'        },
+    { f: 'ground_glass', c: 'ch-gg',            l: '% Ground Glass', v: 'vln-gg',           h: 'hist-gg'           },
+    { f: 'emphysema',    c: 'ch-emph',          l: '% Emphysema',    v: 'vln-emph',         h: 'hist-emph'         },
   ];
   if (vizMode === 'violin') {
     indiv.forEach(({ c }) => document.getElementById(c).closest('.chart-card').style.display = 'none');
-    document.getElementById('vln-img-cont').style.display = '';
+    document.getElementById('vln-img-cont').style.display  = '';
+    document.getElementById('hist-img-cont').style.display = 'none';
     indiv.forEach(({ f, l, v }) => violinCard(v, l, f, groups));
+  } else if (vizMode === 'hist') {
+    indiv.forEach(({ c }) => document.getElementById(c).closest('.chart-card').style.display = 'none');
+    document.getElementById('vln-img-cont').style.display  = 'none';
+    document.getElementById('hist-img-cont').style.display = '';
+    indiv.forEach(({ f, l, h }) => histCard(h, l, f, groups));
   } else {
     indiv.forEach(({ c }) => document.getElementById(c).closest('.chart-card').style.display = '');
-    document.getElementById('vln-img-cont').style.display = 'none';
+    document.getElementById('vln-img-cont').style.display  = 'none';
+    document.getElementById('hist-img-cont').style.display = 'none';
     indiv.forEach(({ f, c, l }) => makeChart(c, meanBarByGroup(filtered.filter(r => r[f] !== null && r[f] >= 0), f, l)));
   }
 }
